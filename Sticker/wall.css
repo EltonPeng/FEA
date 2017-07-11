@@ -1,0 +1,38 @@
+body {
+	background-image: Url('background.jpg');
+}
+
+.wall {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.sticker {
+	height: 200px;
+	width: 200px;
+	min-width: 200px;
+	min-width: 200px;
+	background-color: #ffe699;
+	margin: 20px;
+}
+
+.default {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#createNew {
+	height: 50px;
+	width: 50px;
+}
+
+.sticker-content {
+	width: 180px;
+	height: 180px;
+	margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
