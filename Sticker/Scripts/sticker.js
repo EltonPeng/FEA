@@ -3,8 +3,13 @@
 var index = 0;
 
 $(document).ready(function () {
+  //localStorage.removeItem("firststicker");
   $(".wall").on("click", "#createNew", createNewSticker);
-  localStorage.times = "0";
+  if(localStorage.stickers){
+    $(JSON.parse(localStorage.stickers).stickers).each((_, s) => {
+      $("#createNew").parent().before('<div class="sticker"><textarea id="' + s.id + '" class="sticker-content">' + s.content + '</textarea></div>');
+    })
+  }
 })
 
 $(document).keydown(keydown)
@@ -12,6 +17,7 @@ $(document).keydown(keydown)
 function keydown(e) {
   if(e.keyCode === 13){
   	$("form").submit();
+    return false;
   }
 }
 
@@ -20,12 +26,15 @@ function createNewSticker() {
 }
 
 function commit(sticker) {
-  const content = $(sticker).find("textarea")[0].innerhtml;
-  const id = $($(sticker).find("textarea")[0]).attr("id");
-  const first_sticker = new Sticker({id, content});
+  var stickers = new Stickers();
+  $(sticker).find("textarea").each((_, t) => {
+    const id = $(t).attr("id");
+    const content = $(t).val();
+    stickers.push(new Sticker({id, content}));
+  });  
 
-  localStorage.firststicker = first_sticker;
-  alert("storage " + localStorage.firststicker.getContent());
+  localStorage.stickers = JSON.stringify(stickers);
+  alert("saved"); 
   return false;
 }
 
@@ -34,8 +43,14 @@ class Sticker {
     this.id = id;
     this.content = content;
   }
+}
 
-  getContent() {
-  	return this.content;
+class Stickers {
+  constructor() {
+    this.stickers = [];
+  }
+
+  push(sticker) {
+    this.stickers.push(sticker);
   }
 }
