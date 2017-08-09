@@ -9,6 +9,10 @@ form {
 	flex-grow: 1;
 }
 
+textarea { 
+	resize:none;
+}
+
 .footer {
 	background-color: #EE2211; 
 	height: 100px; 

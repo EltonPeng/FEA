@@ -5,6 +5,7 @@ var index = 0;
 $(document).ready(function () {
   //localStorage.removeItem("firststicker");
   $(".wall").on("click", "#createNew", createNewSticker);
+  $(".wall").on("click", ".remove", removeSticker);
   if(localStorage.stickers){
     $(JSON.parse(localStorage.stickers).stickers).each((_, s) => {
       $("#createNew").parent().before('<div class="sticker"><div class="remove">Remove</div><textarea id="' + s.id + '" class="sticker-content">' + s.content + '</textarea></div>');
@@ -25,9 +26,14 @@ function createNewSticker() {
   $("#createNew").parent().before('<div class="sticker"><div class="remove">Remove</div><textarea id="st' + ++index + '" class="sticker-content"></textarea></div>');
 }
 
-function commit(sticker) {
+function removeSticker(e) {
+  $(e.target).parent().remove();
+  commit();
+}
+
+function commit() {
   var stickers = new Stickers();
-  $(sticker).find("textarea").each((_, t) => {
+  $("form").find("textarea").each((_, t) => {
     const id = $(t).attr("id");
     const content = $(t).val();
     stickers.push(new Sticker({id, content}));
