@@ -1,5 +1,18 @@
 body {
 	background-image: Url('background.jpg');
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+form {
+	flex-grow: 1;
+}
+
+.footer {
+	background-color: #EE2211; 
+	height: 100px; 
+	width: 100%;
 }
 
 .wall {
@@ -26,13 +39,20 @@ body {
 #createNew {
 	height: 50px;
 	width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .sticker-content {
 	width: 180px;
-	height: 180px;
+	height: 120px;
 	margin: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.remove {
+	margin: 5px;
 }
