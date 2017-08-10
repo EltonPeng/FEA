@@ -11,10 +11,12 @@ form {
 
 textarea { 
 	resize:none;
+	background: transparent;
+	border: 0px;
 }
 
 .footer {
-	background-color: #EE2211; 
+	background-color: #FFFFFF; 
 	height: 100px; 
 	width: 100%;
 }

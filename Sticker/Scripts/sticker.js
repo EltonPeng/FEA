@@ -8,7 +8,8 @@ $(document).ready(function () {
   $(".wall").on("click", ".remove", removeSticker);
   if(localStorage.stickers){
     $(JSON.parse(localStorage.stickers).stickers).each((_, s) => {
-      $("#createNew").parent().before('<div class="sticker"><div class="remove">Remove</div><textarea id="' + s.id + '" class="sticker-content">' + s.content + '</textarea></div>');
+      index = s.id.substr(2);
+      insertSticker(index, s.content);
     })
   }
 })
@@ -23,7 +24,11 @@ function keydown(e) {
 }
 
 function createNewSticker() {
-  $("#createNew").parent().before('<div class="sticker"><div class="remove">Remove</div><textarea id="st' + ++index + '" class="sticker-content"></textarea></div>');
+  insertSticker(++index, '');
+}
+
+function insertSticker(id, content) {
+  $("#createNew").parent().before('<div class="sticker"><div class="remove">Remove</div><textarea id="st' + id + '" class="sticker-content">' + content + '</textarea></div>');
 }
 
 function removeSticker(e) {
