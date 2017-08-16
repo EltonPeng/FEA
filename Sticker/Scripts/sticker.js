@@ -28,7 +28,9 @@ function createNewSticker() {
 }
 
 function insertSticker(id, content) {
-  $("#createNew").parent().before('<div class="sticker"><div class="remove">Remove</div><textarea id="st' + id + '" class="sticker-content">' + content + '</textarea></div>');
+  const classRotate = "rotate" + Math.ceil(Math.random()*6);
+
+  $("#createNew").parent().before('<div class="sticker ' + classRotate + '"><div class="remove">Remove</div><textarea id="st' + id + '" class="sticker-content">' + content + '</textarea></div>');
 }
 
 function removeSticker(e) {
