@@ -74,6 +74,10 @@ textarea {
     align-items: center;
 }
 
+.tag-content {
+	height:18px;
+}
+
 .sticker-content {
 	width: 185px;
 	margin: 5px;
@@ -86,5 +90,13 @@ textarea {
 }
 
 .remove {
-	margin: 5px;
+	background-color: #EEDDFF;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+	width: 16px;
+    height: 16px;
+    position: absolute;
+    left: -8px;
+    top: -8px;
 }

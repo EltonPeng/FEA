@@ -30,7 +30,7 @@ function createNewSticker() {
 function insertSticker(id, content) {
   const classRotate = "rotate" + Math.ceil(Math.random()*6);
 
-  $("#createNew").parent().before('<div class="sticker ' + classRotate + '"><div class="remove">Remove</div><textarea id="st' + id + '" class="sticker-content">' + content + '</textarea></div>');
+  $("#createNew").parent().before('<div class="sticker ' + classRotate + '"><div class="remove">X</div><textarea class="tag-content"></textarea><textarea id="st' + id + '" class="sticker-content">' + content + '</textarea></div>');
 }
 
 function removeSticker(e) {
@@ -40,7 +40,7 @@ function removeSticker(e) {
 
 function commit() {
   var stickers = new Stickers();
-  $("form").find("textarea").each((_, t) => {
+  $("form").find(".sticker-content").each((_, t) => {
     const id = $(t).attr("id");
     const content = $(t).val();
     stickers.push(new Sticker({id, content}));
