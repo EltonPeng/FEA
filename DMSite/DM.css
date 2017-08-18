@@ -1,0 +1,36 @@
+.frame {
+  background: #CCFFFF;
+  display: flex;
+	flex-direction: row;
+	height: 100vh;
+}
+
+.menu {
+  background: #AADDFF;
+  width: 200px;
+  height: 100%;
+  flex: none;
+}
+
+.content {
+  margin: 10px;
+  background: #8899EE;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.summary {
+  background: white;
+  display: flex;
+	flex-direction: row;
+}
+
+.summary div {
+  margin-left: 20px;
+}
+
+.list {
+  background: #44EEFF;
+  flex: 1;
+}
