@@ -1,6 +1,6 @@
 namespace Board.Models
 {
-    public class Item
+    public class Sticker
     {
         public int Id { get; set; }
 

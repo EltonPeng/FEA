@@ -1,3 +1,4 @@
+using Amazon.DynamoDBv2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,26 @@ namespace Board
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var dynamoDbConfig = Configuration.GetSection("DynamoDb");
+            var runLocalDynamoDb = dynamoDbConfig.GetValue<bool>("LocalMode");
+
+            if (runLocalDynamoDb)
+            {
+                services.AddSingleton<IAmazonDynamoDB>(sp =>
+                {
+                    var clientConfig = new AmazonDynamoDBConfig
+                    {
+                        ServiceURL = dynamoDbConfig.GetValue<string>("LocalServiceUrl"),
+                        UseHttp = true
+                    };
+                    return new AmazonDynamoDBClient(clientConfig);
+                });
+            }
+            else
+            {
+                //services.AddAWSService<IAmazonDynamoDB>();
+            }
+
             services.AddControllers();
         }
 
