@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Board.Models;
+using StackExchange.Redis;
 
 namespace Board.Controllers
 {
@@ -17,27 +18,35 @@ namespace Board.Controllers
     {
         private const string TableName = "SampleData";
 
-        private readonly ILogger<WallController> _logger;
-
         private readonly IAmazonDynamoDB _amazonDynamoDb;
 
-        public WallController(ILogger<WallController> logger, IAmazonDynamoDB amazonDynamoDb)
+        private readonly IDatabase _database;
+
+        public WallController(IDatabase database)
         {
-            _logger = logger;
-            _amazonDynamoDb = amazonDynamoDb;
+            _database = database;
         }
 
-        //[HttpGet]
-        //public IEnumerable<WeatherForecast> Get()
-        //{
-            //var rng = new Random();
-            //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            //{
-                //Date = DateTime.Now.AddDays(index),
-                //TemperatureC = rng.Next(-20, 55)
-            //})
-            //.ToArray();
-        //}
+        [HttpGet]
+        [Route("test")]
+        public string GetTest()
+        {
+            return "test";
+        }
+
+        [HttpGet]
+        [Route("history")]
+        public string Get()
+        {
+            return _database.StringGet("WallHistory");
+        }
+
+        [HttpPost]
+        [Route("tocache")]
+        public void Post()
+        {
+            _database.StringSet("WallHistory", "item from cache");
+        }
 
         [HttpGet]
         [Route("init")]

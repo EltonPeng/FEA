@@ -1,0 +1,22 @@
+{
+  "name": "wall-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "author": "Test",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "ejs": "^2.3.4",
+    "express": "^4.13.3",
+    "morgan": "^1.6.1",
+    "redis": "^3.0.2"
+  },
+  "devDependencies": {
+    "body-parser": "^1.14.1",
+    "errorhandler": "^1.4.2",
+    "method-override": "^2.3.5",
+    "morgan": "^1.6.1",
+    "redis": "^3.0.2"
+  }
+}

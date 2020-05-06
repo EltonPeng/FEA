@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 
 namespace Board
 {
@@ -45,6 +46,9 @@ namespace Board
             {
                 //services.AddAWSService<IAmazonDynamoDB>();
             }
+
+            IConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost:8031");
+            services.AddScoped(s => redis.GetDatabase());
 
             services.AddControllers();
         }
