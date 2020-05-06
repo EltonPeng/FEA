@@ -6,7 +6,7 @@ var express        = require('express'),
     redis          = require('redis');
 
 var app = module.exports = express();
-var client = redis.createClient();
+var client = redis.createClient(6379, 'redis');
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
@@ -29,23 +29,21 @@ if ('production' == app.get('env')) {
   app.use(errorHandler());
 }
 
-app.get('/items', function (req, res) {
-  var cacheItems = null;
-  client.get('items', function(error, result) {
-    if (error) throw error;
-    cacheItems = result;
+app.get('/items', (req, res) => {
+  return client.get('items', (error, result) => {
+    return res.status(200).json(JSON.parse(result));
   });
-  res.json(cacheItems);
 });
 
-app.post('/item', function (req, res) {
+app.get('/item', (req, res) => {
   const defaultItems = [
   {
     id: 1,
     header: 'Default Item',
     content: 'I am from Redis'
   }];
-  client.set('items', defaultItems, redis.print);
+  client.set('items', JSON.stringify(defaultItems));
+  return res.send('redis setSuccess');
 });
 
 app.listen(8080);
