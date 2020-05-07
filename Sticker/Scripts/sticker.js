@@ -6,6 +6,16 @@ $(document).ready(function () {
   //localStorage.removeItem("firststicker");
   $(".wall").on("click", "#createNew", createNewSticker);
   $(".wall").on("click", ".remove", removeSticker);
+  $(".wall").on("click", ".readCache", readFromCache);
+
+  $.ajax({
+    url: 'http://board:8010/wall/init',
+    type: 'GET',
+    success: function (result) {
+      alert('DynamoDB connected');
+    }
+  });
+
   if(localStorage.stickers){
     $(JSON.parse(localStorage.stickers).stickers).each((_, s) => {
       index = s.id.substr(2);
@@ -38,6 +48,11 @@ function removeSticker(e) {
   commit();
 }
 
+function readFromCache() {
+  fetch('http://board:8010/wall/tocache').then();
+  fetch('http://board:8010/wall/history').then(response => alert(response.json()));
+}
+
 function commit() {
   var stickers = new Stickers();
   $("form").find(".sticker-content").each((_, t) => {
@@ -46,8 +61,8 @@ function commit() {
     stickers.push(new Sticker({id, content}));
   });  
 
-  localStorage.stickers = JSON.stringify(stickers);
-  alert("saved"); 
+  //localStorage.stickers = JSON.stringify(stickers);
+  //alert("saved"); 
   return false;
 }
 
