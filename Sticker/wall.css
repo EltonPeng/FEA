@@ -40,9 +40,20 @@ textarea {
 }
 
 .footer {
+	display: flex;
+	justify-content: center;
 	background-color: #FFFFFF; 
 	height: 100px; 
 	width: 100%;
+}
+
+.btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(152, 152, 152); 
+	width: 130px;
+	margin: 10px;
 }
 
 .wall {

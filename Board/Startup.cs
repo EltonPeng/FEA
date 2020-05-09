@@ -43,6 +43,7 @@ namespace Board
             IConnectionMultiplexer redis = ConnectionMultiplexer.Connect("redis:6379");
             services.AddScoped(s => redis.GetDatabase());
 
+            services.AddCors(options => options.AddPolicy("AllowCors", builder => builder.AllowAnyOrigin().AllowAnyMethod()));
             services.AddControllers();
         }
 
@@ -57,6 +58,8 @@ namespace Board
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("AllowCors");
 
             app.UseAuthorization();
 

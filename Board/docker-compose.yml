@@ -34,7 +34,7 @@ services:
   sticker:
     image: sticker
     ports:
-      - "8001"
+      - "8003:8001" 
     depends_on: 
       - board
     networks:

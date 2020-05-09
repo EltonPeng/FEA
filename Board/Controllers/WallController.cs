@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 using Board.Models;
 using StackExchange.Redis;
 
 namespace Board.Controllers
 {
+    [EnableCors("AllowCors")]
     [ApiController]
     [Route("[controller]")]
     public class WallController : ControllerBase
