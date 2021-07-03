@@ -1,0 +1,30 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.adv {
+    height: 100px;
+    wight: 200px;
+    background-color: yellow;
+}
+
+.content {
+    background-color: grey;
+    width: 768px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.item {
+    background-color: lightgrey;
+    width: 90%;
+    display: flex;
+    justify-content: center;
+}
+
+.button {
+    background-color: lightblue;
+}
