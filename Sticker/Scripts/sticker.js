@@ -6,12 +6,30 @@ $(document).ready(function () {
   //localStorage.removeItem("firststicker");
   $(".wall").on("click", "#createNew", createNewSticker);
   $(".wall").on("click", ".remove", removeSticker);
-  if(localStorage.stickers){
-    $(JSON.parse(localStorage.stickers).stickers).each((_, s) => {
-      index = s.id.substr(2);
-      insertSticker(index, s.content);
-    })
-  }
+  $(".footer").on("click", ".setCache", setCache);
+  $(".footer").on("click", ".readCache", readFromCache);
+
+  $.ajax({
+    url: 'http://localhost:8010/wall/init',
+    type: 'GET',
+    success: function (result) {
+      console.log('DynamoDB connected');
+      fetch('http://localhost:8010/wall/all').then(response => response.json()).then(res => $(res).each((_, s) => {
+          index = s.id;
+          insertSticker(index, s.header);
+        }));
+    },
+    error: function (error) {
+      console.log(error);
+    }
+  });
+
+  // if(localStorage.stickers){
+  //   $(JSON.parse(localStorage.stickers).stickers).each((_, s) => {
+  //     index = s.id.substr(2);
+  //     insertSticker(index, s.content);
+  //   })
+  // }
 })
 
 $(document).keydown(keydown)
@@ -38,6 +56,14 @@ function removeSticker(e) {
   commit();
 }
 
+function setCache() {
+  fetch('http://localhost:8010/wall/tocache').then(console.log('Redis connected'));
+}
+
+function readFromCache() {
+  fetch('http://localhost:8010/wall/history').then(response => response.text()).then(res => console.log(res));
+}
+
 function commit() {
   var stickers = new Stickers();
   $("form").find(".sticker-content").each((_, t) => {
@@ -46,8 +72,8 @@ function commit() {
     stickers.push(new Sticker({id, content}));
   });  
 
-  localStorage.stickers = JSON.stringify(stickers);
-  alert("saved"); 
+  //localStorage.stickers = JSON.stringify(stickers);
+  //alert("saved"); 
   return false;
 }
 

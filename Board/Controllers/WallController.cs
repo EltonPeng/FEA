@@ -3,15 +3,15 @@ using Amazon.DynamoDBv2.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Cors;
 using Board.Models;
 using StackExchange.Redis;
 
 namespace Board.Controllers
 {
+    [EnableCors("AllowCors")]
     [ApiController]
     [Route("[controller]")]
     public class WallController : ControllerBase
@@ -22,30 +22,24 @@ namespace Board.Controllers
 
         private readonly IDatabase _database;
 
-        public WallController(IDatabase database)
+        public WallController(IDatabase database, IAmazonDynamoDB amazonDynamoDb)
         {
             _database = database;
-        }
-
-        [HttpGet]
-        [Route("test")]
-        public string GetTest()
-        {
-            return "test";
+            _amazonDynamoDb = amazonDynamoDb;
         }
 
         [HttpGet]
         [Route("history")]
-        public string Get()
+        public string GetCache()
         {
             return _database.StringGet("WallHistory");
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("tocache")]
-        public void Post()
+        public void ToCache()
         {
-            _database.StringSet("WallHistory", "item from cache");
+            _database.StringSet("WallHistory", "item from redis");
         }
 
         [HttpGet]
@@ -91,7 +85,7 @@ namespace Board.Controllers
                     Item = new Dictionary<string, AttributeValue>
                     {
                         { "Id", new AttributeValue { N = "1" }},
-                        { "Header", new AttributeValue { S = "default item" }}
+                        { "Header", new AttributeValue { S = "default item in DynamoDB" }}
                     }
                 };
 
@@ -99,20 +93,34 @@ namespace Board.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Sticker>>> GetAll()
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Sticker>> Get(int id)
         {
-            var request = new QueryRequest
+            var request = new GetItemRequest
             {
-                TableName = TableName
+                TableName = TableName,
+                Key = new Dictionary<string, AttributeValue> { { "Id", new AttributeValue { N = id.ToString() } } }
             };
 
-            var response = await _amazonDynamoDb.QueryAsync(request);
+            var response = await _amazonDynamoDb.GetItemAsync(request);
 
-            Console.WriteLine("Query Table Finished: -- ");
+            if (!response.IsItemSet)
+                return NotFound();
 
-            //if (!response.IsItemSet)
-            //    return NotFound();
+            var sticker = response.Item;
+            return new Sticker { Id =  int.Parse(sticker["Id"].N), Header = sticker["Header"].S };
+        }
+
+        [HttpGet]
+        [Route("all")]
+        public async Task<ActionResult<List<Sticker>>> GetAll()
+        {
+            var request = new ScanRequest
+            {
+                TableName = TableName,
+            };
+
+            var response = await _amazonDynamoDb.ScanAsync(request);
 
             return response.Items.Select(result =>
                 new Sticker { Id = Convert.ToInt32(result["Id"].N), Header = result["Header"].S}).ToList();

@@ -1,0 +1,47 @@
+version: '3.4'
+
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379"
+    networks:
+      - backend
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    networks:
+      - backend   
+
+  board:
+    image: board
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8011:443"
+      - "8010:80"
+    environment:
+      AWS_SECRET_ACCESS_KEY: x
+      AWS_ACCESS_KEY_ID: x
+    depends_on:
+      - dynamodb
+      - redis
+    networks: 
+      - backend
+      - frontend
+  
+  sticker:
+    image: sticker
+    ports:
+      - "8003:8001" 
+    depends_on: 
+      - board
+    networks:
+      - frontend
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge

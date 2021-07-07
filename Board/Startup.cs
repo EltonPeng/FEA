@@ -30,26 +30,20 @@ namespace Board
             var dynamoDbConfig = Configuration.GetSection("DynamoDb");
             var runLocalDynamoDb = dynamoDbConfig.GetValue<bool>("LocalMode");
 
-            if (runLocalDynamoDb)
+            services.AddSingleton<IAmazonDynamoDB>(sp =>
             {
-                services.AddSingleton<IAmazonDynamoDB>(sp =>
+                var clientConfig = new AmazonDynamoDBConfig
                 {
-                    var clientConfig = new AmazonDynamoDBConfig
-                    {
-                        ServiceURL = dynamoDbConfig.GetValue<string>("LocalServiceUrl"),
-                        UseHttp = true
-                    };
-                    return new AmazonDynamoDBClient(clientConfig);
-                });
-            }
-            else
-            {
-                //services.AddAWSService<IAmazonDynamoDB>();
-            }
+                    ServiceURL = dynamoDbConfig.GetValue<string>("LocalServiceUrl"),
+                    UseHttp = true
+                };
+                return new AmazonDynamoDBClient(clientConfig);
+            });
 
-            IConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost:8031");
+            IConnectionMultiplexer redis = ConnectionMultiplexer.Connect("redis:6379");
             services.AddScoped(s => redis.GetDatabase());
 
+            services.AddCors(options => options.AddPolicy("AllowCors", builder => builder.AllowAnyOrigin().AllowAnyMethod()));
             services.AddControllers();
         }
 
@@ -64,6 +58,8 @@ namespace Board
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("AllowCors");
 
             app.UseAuthorization();
 
